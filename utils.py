@@ -131,6 +131,10 @@ def plot_alignment_to_numpy(alignment, info=None):
 
 
 def load_wav_to_torch(full_path):
+  import torchaudio
+  data, sampling_rate = torchaudio.load(full_path)
+  return data.squeeze(0), sampling_rate
+
   sampling_rate, data = read(full_path)
   return torch.FloatTensor(data.astype(np.float32)), sampling_rate
 
