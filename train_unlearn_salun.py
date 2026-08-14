@@ -383,6 +383,15 @@ def main():
     os.makedirs(args.model_dir, exist_ok=True)
 
     # load the pretrained model
+    if not os.path.isfile(args.pretrained):
+        raise FileNotFoundError(
+            "pretrained checkpoint not found: %r (resolved: %s)\n"
+            "  The pretrained/ dir is gitignored, so it is NOT on the cluster. "
+            "Upload it first, e.g.:\n"
+            "    scp pretrained/pretrained_vctk.pth "
+            "<cluster>:~/cl-gen/calcury/vits/pretrained/pretrained_vctk.pth\n"
+            "  or pass --pretrained <absolute-path> to wherever it lives on "
+            "the cluster." % (args.pretrained, os.path.abspath(args.pretrained)))
     net_g = build_model(hps)
     net_g, _, _, _ = utils.load_checkpoint(args.pretrained, net_g, None)
     net_g = net_g.to(device)
