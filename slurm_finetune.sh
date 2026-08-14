@@ -43,7 +43,7 @@ python train_unlearn_salun.py \
     -m vctk_unlearn_salun \
     --pretrained pretrained/pretrained_vctk.pth \
     --forget-speaker p231 \
-    --lr 1e-6 \
+    --lr 5e-6 \
     --epochs 10 \
     --save-every 2 \
     --sparsity 0.1
