@@ -65,11 +65,12 @@ class TextAudioLoader(torch.utils.data.Dataset):
     def get_audio(self, filename):
         audio, sampling_rate = load_wav_to_torch(filename)
         if sampling_rate != self.sampling_rate:
-            raise ValueError("SR {} doesn't match target {} SR in {}".format(
-                sampling_rate, self.sampling_rate, filename))
+            import torchaudio
+            audio = torchaudio.functional.resample(
+                audio, sampling_rate, self.sampling_rate)
         audio_norm = audio / self.max_wav_value
         audio_norm = audio_norm.unsqueeze(0)
-        spec_filename = filename.replace(".wav", ".spec.pt")
+        spec_filename = os.path.splitext(filename)[0] + ".spec.pt"
         if os.path.exists(spec_filename):
             spec = torch.load(spec_filename)
         else:
@@ -203,11 +204,12 @@ class TextAudioSpeakerLoader(torch.utils.data.Dataset):
     def get_audio(self, filename):
         audio, sampling_rate = load_wav_to_torch(filename)
         if sampling_rate != self.sampling_rate:
-            raise ValueError("SR {} doesn't match target {} SR in {}".format(
-                sampling_rate, self.sampling_rate, filename))
+            import torchaudio
+            audio = torchaudio.functional.resample(
+                audio, sampling_rate, self.sampling_rate)
         audio_norm = audio / self.max_wav_value
         audio_norm = audio_norm.unsqueeze(0)
-        spec_filename = filename.replace(".wav", ".spec.pt")
+        spec_filename = os.path.splitext(filename)[0] + ".spec.pt"
         if os.path.exists(spec_filename):
             spec = torch.load(spec_filename)
         else:
